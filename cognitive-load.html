@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>認知負荷理論</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Sans TC', Arial, sans-serif; background: #1a1a2e; color: #333; }
+    
+    /* Header */
+    .site-header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      padding: 60px 20px;
+      text-align: center;
+      color: white;
+    }
+    .site-header h1 {
+      font-size: 3.5em;
+      font-weight: 900;
+      letter-spacing: 4px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+    }
+    
+    /* Main content area */
+    .content-wrapper {
+      background: #f5f5f5;
+      min-height: 100vh;
+    }
+    
+    /* Intro card */
+    .intro-card {
+      background: #1e2a4a;
+      color: white;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 50px 40px;
+      text-align: center;
+      border-bottom: 4px solid #e8a020;
+    }
+    .intro-card .brain-icon { font-size: 3em; margin-bottom: 15px; }
+    .intro-card h2 { font-size: 1.8em; font-weight: 700; margin-bottom: 8px; }
+    .intro-card .subtitle { color: #a0b0d0; margin-bottom: 20px; font-size: 1.1em; }
+    .intro-card p { line-height: 1.8; color: #c0cce0; }
+    
+    /* Section */
+    .section { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+    .section-title {
+      font-size: 1.5em;
+      font-weight: 700;
+      color: #1e2a4a;
+      border-left: 4px solid #e8a020;
+      padding-left: 16px;
+      margin-bottom: 10px;
+    }
+    .section-desc { color: #555; margin-bottom: 24px; line-height: 1.7; }
+    
+    /* Cards */
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border: 1px solid #e8e8e8;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.15); transform: translateY(-2px); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .card-title { font-size: 1.1em; font-weight: 700; color: #1e2a4a; }
+    .card-icon { font-size: 1.4em; }
+    .card-subtitle { color: #e8a020; font-size: 0.9em; font-weight: 600; margin-bottom: 10px; }
+    .card-body { color: #555; line-height: 1.7; font-size: 0.95em; }
+    .card.blue-border { border-left: 4px solid #e8a020; }
+    .card.purple-border { border-left: 4px solid #6c5ce7; }
+    
+    /* Load types */
+    .load-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px; }
+    .load-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .load-card.bad { border-top: 4px solid #e74c3c; }
+    .load-card.neutral { border-top: 4px solid #f39c12; }
+    .load-card.good { border-top: 4px solid #27ae60; }
+    .load-card h4 { font-size: 1em; font-weight: 700; margin-bottom: 6px; color: #1e2a4a; }
+    .load-card .load-tag { font-size: 0.8em; padding: 2px 8px; border-radius: 20px; display: inline-block; margin-bottom: 8px; }
+    .load-tag.bad-tag { background: #fdecea; color: #e74c3c; }
+    .load-tag.neutral-tag { background: #fef9e7; color: #f39c12; }
+    .load-tag.good-tag { background: #eafaf1; color: #27ae60; }
+    .load-card p { font-size: 0.9em; color: #666; line-height: 1.6; }
+    
+    /* Strategies */
+    .strategy-list { list-style: none; margin-top: 16px; }
+    .strategy-list li {
+      background: white;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+    }
+    .strategy-num {
+      background: #1e2a4a;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85em;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .strategy-text strong { color: #1e2a4a; display: block; margin-bottom: 4px; }
+    .strategy-text p { color: #666; font-size: 0.9em; line-height: 1.6; }
+    
+    /* Quiz */
+    .quiz-card {
+      background: linear-gradient(135deg, #1e2a4a, #2d3f6a);
+      color: white;
+      border-radius: 16px;
+      padding: 30px;
+      margin-top: 16px;
+    }
+    .quiz-question { font-size: 1.1em; font-weight: 600; margin-bottom: 20px; line-height: 1.6; }
+    .quiz-options { display: grid; gap: 10px; }
+    .quiz-btn {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: left;
+      font-size: 0.95em;
+      transition: all 0.2s;
+    }
+    .quiz-btn:hover { background: rgba(255,255,255,0.2); }
+    .quiz-btn.correct { background: rgba(39,174,96,0.4); border-color: #27ae60; }
+    .quiz-btn.wrong { background: rgba(231,76,60,0.4); border-color: #e74c3c; }
+    .quiz-feedback { margin-top: 16px; padding: 12px 16px; border-radius: 8px; display: none; }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback.correct-fb { background: rgba(39,174,96,0.2); border: 1px solid #27ae60; }
+    .quiz-feedback.wrong-fb { background: rgba(231,76,60,0.2); border: 1px solid #e74c3c; }
+    
+    /* Footer */
+    footer {
+      background: #1e2a4a;
+      color: #a0b0d0;
+      text-align: center;
+      padding: 30px 20px;
+      font-size: 0.9em;
+    }
+    footer a { color: #e8a020; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <h1>認知負荷理論</h1>
+  </header>
+
+  <div class="content-wrapper">
+
+    <!-- Intro -->
+    <div class="intro-card">
+      <div class="brain-icon">🧠</div>
+      <h2>認知負荷理論</h2>
+      <p class="subtitle">大腦的頻寬管理學 (Cognitive Load Theory)</p>
+      <p>想像你的大腦是一台電腦。如果「記憶體 (RAM)」被雜訊塞滿，你就無法處理新知識。本互動指南將帶你了解如何管理大腦資源，避免「當機」，提升學習與工作效率。</p>
+    </div>
+
+    <!-- Section 1 -->
+    <div class="section">
+      <h3 class="section-title">1. 大腦運作機制：電腦比喻法</h3>
+      <p class="section-desc">在深入理論之前，我們先建立一個基模。根據 Sweller 的理論，人類的認知架構可以完美地對應到電腦的硬體構造。請點擊下方卡片了解這兩個關鍵系統。</p>
+
+      <div class="card blue-border">
+        <div class="card-header">
+          <span class="card-title">工作記憶 (Working Memory)</span>
+          <span class="card-icon">⚡</span>
+        </div>
+        <div class="card-subtitle">等同於：電腦記憶體（RAM）</div>
+        <div class="card-body">這是處理資訊的暫存區。容量非常有限（著名的 7±2 法則）。當資訊量超過這裡的負荷，就會發生「認知超載」，導致學習失敗。</div>
+      </div>
+
+      <div class="card purple-border">
+        <div class="card-header">
+          <span class="card-title">長期記憶 (Long-term Memory)</span>
+          <span class="card-icon">💾</span>
+        </div>
+        <div class="card-subtitle">等同於：電腦硬碟（HDD）</div>
+        <div class="card-body">知識的倉庫。容量幾乎無限。學習的最終目標，就是將工作記憶處理好的資訊，轉移並存入長期記憶，形成「基模（Schema）」。</div>
+      </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="section" style="background:#fff; padding: 40px 20px;">
+      <div style="max-width:800px; margin:0 auto;">
+        <h3 class="section-title">2. 認知負荷的三種類型</h3>
+        <p class="section-desc">並非所有的心智努力都是一樣的。Sweller 將認知負荷分為三種，理解它們是優化學習設計的關鍵。</p>
+        <div class="load-grid">
+          <div class="load-card bad">
+            <h4>外在負荷</h4>
+            <span class="load-tag bad-tag">❌ 有害的</span>
+            <p>由<strong>糟糕的教學設計</strong>造成的多餘負荷。例如：雜亂的版面、不必要的動畫、與主題無關的裝飾。這是我們要<strong>極力消除</strong>的。</p>
+          </div>
+          <div class="load-card neutral">
+            <h4>內在負荷</h4>
+            <span class="load-tag neutral-tag">⚙️ 固有的</span>
+            <p>來自<strong>學習材料本身</strong>的難度。微積分就是比加法難，這是本質，無法消除，只能透過循序漸進來<strong>管理</strong>它。</p>
+          </div>
+          <div class="load-card good">
+            <h4>增生負荷</h4>
+            <span class="load-tag good-tag">✅ 有益的</span>
+            <p>由<strong>高效的學習活動</strong>產生的負荷。例如：自我測驗、舉一反三、解題練習。這是我們要<strong>主動追求</strong>的好負荷。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="section">
+      <h3 class="section-title">3. 實戰應用：降低認知負荷的 5 大策略</h3>
+      <p class="section-desc">知道了理論，如何在日常學習和工作中實際應用？以下是五個立刻可用的技巧。</p>
+      <ul class="strategy-list">
+        <li>
+          <div class="strategy-num">1</div>
+          <div class="strategy-text">
+            <strong>分塊學習（Chunking）</strong>
+            <p>將複雜資訊拆解成小單元。就像電話號碼分段記憶一樣，讓工作記憶能輕鬆應付。</p>
+          </div>
+        </li>
+        <li>
+          <div class="strategy-num">2</div>
+          <div class="strategy-text">
+            <strong>善用先備知識</strong>
+            <p>學習新知識前，先複習相關舊知識。強化「基模」，讓大腦更快建立連結，減少新學習的負擔。</p>
+          </div>
+        </li>
+        <li>
+          <div class="strategy-num">3</div>
+          <div class="strategy-text">
+            <strong>消除分散注意力的元素</strong>
+            <p>學習環境要乾淨整潔，移除不必要的視覺干擾。設計文件或簡報時，每一頁只傳遞一個核心概念。</p>
+          </div>
+        </li>
+        <li>
+          <div class="strategy-num">4</div>
+          <div class="strategy-text">
+            <strong>主動提取練習（Retrieval Practice）</strong>
+            <p>不要只是重複閱讀！合上書本，試著回憶剛學的內容。這種「增生負荷」能大幅強化長期記憶的存儲。</p>
+          </div>
+        </li>
+        <li>
+          <div class="strategy-num">5</div>
+          <div class="strategy-text">
+            <strong>交錯練習（Interleaving）</strong>
+            <p>混合不同類型的題目或主題練習，而非一次只練一種。雖然感覺更難，但能建立更強的辨別力和記憶。</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Section 4: Quiz -->
+    <div class="section" style="background:#eef2ff; padding: 40px 20px;">
+      <div style="max-width:800px; margin:0 auto;">
+        <h3 class="section-title">4. 測驗你的理解</h3>
+        <p class="section-desc">讓我們用一個「增生負荷」來檢驗你今天學到了什麼！</p>
+        <div class="quiz-card">
+          <div class="quiz-question">📝 問題：一位老師在教學投影片上，每一頁都放了大量的文字、彩色動畫，以及與主題無關的背景圖片。這主要造成了哪種認知負荷？</div>
+          <div class="quiz-options">
+            <button class="quiz-btn" onclick="checkAnswer(this, false)">A. 內在負荷（Intrinsic Load）</button>
+            <button class="quiz-btn" onclick="checkAnswer(this, true)">B. 外在負荷（Extraneous Load）</button>
+            <button class="quiz-btn" onclick="checkAnswer(this, false)">C. 增生負荷（Germane Load）</button>
+            <button class="quiz-btn" onclick="checkAnswer(this, false)">D. 工作記憶超載（WM Overload）</button>
+          </div>
+          <div id="quiz-feedback" class="quiz-feedback">
+            <strong id="fb-title"></strong>
+            <p id="fb-text"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end content-wrapper -->
+
+  <footer>
+    <p>基於 John Sweller 的認知負荷理論 (1988) &nbsp;|&nbsp; <a href="https://sites.google.com/view/12087755" target="_blank">原始來源</a></p>
+  </footer>
+
+  <script>
+    function checkAnswer(btn, isCorrect) {
+      // 清除所有按鈕狀態
+      document.querySelectorAll('.quiz-btn').forEach(b => {
+        b.classList.remove('correct', 'wrong');
+        b.disabled = true;
+      });
+      
+      let feedback = document.getElementById('quiz-feedback');
+      let fbTitle = document.getElementById('fb-title');
+      let fbText = document.getElementById('fb-text');
+      
+      if (isCorrect) {
+        btn.classList.add('correct');
+        feedback.className = 'quiz-feedback show correct-fb';
+        fbTitle.textContent = '✅ 答對了！';
+        fbText.textContent = '正確！雜亂的視覺設計、不必要的動畫都屬於「外在負荷」——由糟糕的教學設計造成的多餘負擔，是我們應該極力消除的。';
+      } else {
+        btn.classList.add('wrong');
+        // 標示正確答案
+        document.querySelectorAll('.quiz-btn')[1].classList.add('correct');
+        feedback.className = 'quiz-feedback show wrong-fb';
+        fbTitle.textContent = '❌ 再想想！';
+        fbText.textContent = '答案是 B. 外在負荷。由糟糕的教學設計（大量文字、無關動畫、雜亂背景）造成的多餘認知負擔，正是外在負荷的典型例子。';
+      }
+      feedback.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
